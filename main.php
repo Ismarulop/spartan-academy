@@ -15,6 +15,13 @@
                 include "register.php";
                 break;
 
+            case 'registerUser':
+                include "registerUser.php";
+                break;
+            case 'registerProfesor':
+                include "registerProfesor.php";
+                break;
+
             default:
                 include "paginaPrincipal.php";
                 break;

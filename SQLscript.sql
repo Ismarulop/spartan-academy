@@ -6,6 +6,8 @@ CREATE TABLE usuario(
     pass varchar(20) not null,
     fecha_alta date not null,
     imagen_perfil varchar(300),
+    edad int(50) not null,
+    dni varchar(20) not null,
     primary Key (userName)
 );
 CREATE TABLE profesor(
@@ -16,6 +18,8 @@ CREATE TABLE profesor(
     pass varchar(20) not null,
     dni varchar(20) not null,
     edad int(50) not null,
+    fecha_alta date not null,
+    imagen_perfil varchar(300),
     primary Key (userName)
 );
 CREATE TABLE actividad(

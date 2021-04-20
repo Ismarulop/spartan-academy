@@ -1,49 +1,50 @@
 <!-- Falta modificar entero -->
-
 <h2>Registrarse profesor</h2>
 <form>
     <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="inputEmail4">Email</label>
-            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+        <div class="form-group col-md-4">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" id="nombre">
         </div>
         <div class="form-group col-md-6">
-            <label for="inputPassword4">Password</label>
-            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+            <label for="Apellidos">Apellidos</label>
+            <input type="text" id="apellidos" class="form-control">
         </div>
-    </div>
-    <div class="form-group">
-        <label for="inputAddress">Address</label>
-        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-    </div>
-    <div class="form-group">
-        <label for="inputAddress2">Address 2</label>
-        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+        <div class="form-group col-md-4">
+            <label for="userName">Nombre de usuario</label>
+            <input type="text" class="form-control" id="userName">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="dni">dni</label>
+            <input type="text" class="form-control" id="dni">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="dni">edad</label>
+            <input type="text" class="form-control" id="dni">
+        </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="inputCity">City</label>
-            <input type="text" class="form-control" id="inputCity">
+            <label for="inputEmail4">Email</label>
+            <input type="email" class="form-control" id="inputEmail4" placeholder="Ej:nombre@gmail.com">
         </div>
-        <div class="form-group col-md-4">
-            <label for="inputState">State</label>
-            <select id="inputState" class="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
-            </select>
+        <div class="form-group col-md-6">
+            <label for="pass">Password</label>
+            <input type="password" class="form-control" id="pass" >
         </div>
-        <div class="form-group col-md-2">
-            <label for="inputZip">Zip</label>
-            <input type="text" class="form-control" id="inputZip">
+        <div class="form-group col-md-6">
+            <label for="pass2">Repeat Password</label>
+            <input type="password" class="form-control" id="pass2" >
         </div>
     </div>
     <div class="form-group">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck">
-            <label class="form-check-label" for="gridCheck">
-                Check me out
-            </label>
-        </div>
+        <label for="fechaAlta">Fecha de alta</label>
+        <input type="date" class="form-control" id="fechaAlta">
     </div>
-    <button type="submit" class="btn btn-primary">Registrar</button>
+    <div class="form-group">
+        <label for="imagenPerfil">Imagen de Perfil</label>
+        <input type="image" class="form-control" id="imagenPerfil" >
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Registrarse</button>
 </form>

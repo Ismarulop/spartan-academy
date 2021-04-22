@@ -21,6 +21,9 @@
             case 'registerProfesor':
                 include "registerProfesor.php";
                 break;
+            case 'paginaClases':
+                include "paginaClases.php";
+                break;
 
             default:
                 include "paginaPrincipal.php";

@@ -4,7 +4,7 @@ CREATE TABLE usuario(
     apellidos varchar(20) not null,
     email varchar(20) not null UNIQUE,
     pass varchar(20) not null,
-    fecha_alta date not null,
+    fecha_alta DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     imagen_perfil varchar(300),
     edad int(50) not null,
     dni varchar(20) not null,
@@ -18,7 +18,7 @@ CREATE TABLE profesor(
     pass varchar(20) not null,
     dni varchar(20) not null,
     edad int(50) not null,
-    fecha_alta date not null,
+    fecha_alta DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     imagen_perfil varchar(300),
     primary Key (userName)
 );

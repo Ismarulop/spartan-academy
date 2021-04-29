@@ -118,5 +118,34 @@ function comprobarSiExisteDni($dni)
         }
     }
 
+    static function comprobarContraseñaCorreo($email, $pass)
+    {
+
+        $conectar = conexion::abrir_conexion();
+        $resultado = $conectar->query("Select * from usuario where email = '$email'");
+
+        //El resultado se convierte en un array asociativo
+        $fila = $resultado->fetch_assoc();
+        if($resultado->num_rows<1) return false;
+        if ($fila['email'] == $email && $fila['pass'] == $pass) {
+            $conectar->close();
+            return $fila;
+        } else {
+
+            $conectar->close();
+
+            return false;
+        }
+    }
+    static function obtenerNombreUsuarioSegunCorreo($email)
+    {
+        $conectar = conexion::abrir_conexion();
+        $resultado = $conectar->query("Select * from usuarios where email='$email'");
+        $fila= $resultado->fetch_assoc();
+        $nombre=$fila['nombre'];
+        var_dump($resultado);
+        $conectar->close();
+
+        return $nombre;
+    }
 }
-    ?>

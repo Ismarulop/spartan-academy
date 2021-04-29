@@ -15,10 +15,10 @@ class Profesor extends Usuario
         $this->pass = $pass;
     }
 
-    function InsertarUsuario()
+    function InsertarProfesor()
     {
         $conectar = conexion::abrir_conexion();
-        $conectar->query("Insert into usuario (userName, nombre, apellidos, dni, edad, email, pass) values('$this->userName','$this->nombre','$this->apellidos','$this->dni','$this->edad','$this->email','$this->pass')");
+        $conectar->query("Insert into usuario (userName, nombre, apellidos, dni, edad, email, pass, esProfesor) values('$this->userName','$this->nombre','$this->apellidos','$this->dni','$this->edad','$this->email','$this->pass','1')");
         $conectar->query("Insert into profesor (userName, nombre, apellidos, dni, edad, email, pass) values('$this->userName','$this->nombre','$this->apellidos','$this->dni','$this->edad','$this->email','$this->pass')");
         $conectar->close();
     }

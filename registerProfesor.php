@@ -21,7 +21,6 @@ if (isset($_POST['registrarProf'])) {
         if ($pass != $pass2) {
             array_push($errores, "Las contraseñas no coinciden");
         }
-
         if ($user->comprobarSiExiste($email)) {
             array_push($errores, "Este email ya existe.");
         }
@@ -34,7 +33,7 @@ if (isset($_POST['registrarProf'])) {
     }
     if (empty($errores)) {
         $user->construirUser($userName, $nombre, $apellidos, $dni, $edad, $email, $pass);
-        $user->InsertarUsuario();
+        $user->InsertarProfesor();
         echo "Usuario $email guardado correctamente";
     }
 }
@@ -75,6 +74,11 @@ if (isset($_POST['registrarProf'])) {
         <div class="form-group col-md-6">
             <label for="pass">Password</label>
             <input value="1234" name="pass" type="password" class="form-control" id="pass">
+            <div class="col-auto">
+                <span id="passwordHelpInline" class="form-text">
+                6 a 16 caracteres, 1 Letra Mayúscula, 1 minuscula,1 caracter especia y no espacios en blanco
+                </span>
+            </div>
         </div>
         <div class="form-group col-md-6">
             <label for="pass2">Repeat Password</label>

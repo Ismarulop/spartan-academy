@@ -26,10 +26,10 @@ if (isset($_POST['registrarUser'])) {
             array_push($errores, "Este email ya existe.");
         }
 
-        if($user->comprobarSiExisteUserName($userName)){
+        if ($user->comprobarSiExisteUserName($userName)) {
             array_push($errores, "El nombre de usuario ya existe.");
         }
-        if($user->comprobarSiExisteDni($dni)){
+        if ($user->comprobarSiExisteDni($dni)) {
             array_push($errores, "El dni introducido ya ha sido utilizado.");
         }
     }
@@ -118,13 +118,17 @@ if (isset($_POST['registrarUser'])) {
         <div class="form-group col-md-6">
             <label for="pass">Password</label>
             <input value="1234" name="pass" type="password" class="form-control" id="pass">
+            <div class="col-auto">
+                <span id="passwordHelpInline" class="form-text">
+                6 a 16 caracteres, 1 Letra Mayúscula, 1 minuscula,1 caracter especia y no espacios en blanco
+                </span>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="pass2">Repeat Password</label>
+                <input value="1234" name="pass2" type="password" class="form-control" id="pass2">
+            </div>
+            <button type="submit" class="btn btn-primary" name="registrarUser">Registrarse</button>
         </div>
-        <div class="form-group col-md-6">
-            <label for="pass2">Repeat Password</label>
-            <input value="1234" name="pass2" type="password" class="form-control" id="pass2">
-        </div>
-        <button type="submit" class="btn btn-primary" name="registrarUser">Registrarse</button>
-    </div>
 </form>
 <?php
 

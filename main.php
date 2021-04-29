@@ -7,6 +7,12 @@
             case 'paginaPrincipal':
                 include "paginaPrincipal.php";
                 break;
+            case 'homeUser':
+                include "homeUser.php";
+                break;
+            case 'homeProfesor':
+                include "homeProfesor.php";
+                break;
             case 'login':
                 include "login.php";
                 break;
@@ -23,6 +29,10 @@
                 break;
             case 'paginaClases':
                 include "paginaClases.php";
+                break;
+            case 'cerrarSesion':
+                session_destroy();
+                header("location: index.php?p=paginaPrincipal");
                 break;
 
             default:

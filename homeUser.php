@@ -1,13 +1,4 @@
-<?php
-  if(isset($_SESSION['login']['datosUsuario'])){
-    if($_SESSION['login']['datosUsuario']['esProfesor']==1){
-      header("location: index.php?p=homeProfesor");
-    }else{
-      header("location: index.php?p=homeUser");
-    }
-
-  }
-?>
+<h1>PAGINA DE USUARIO</h1>
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-indicators">
     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>

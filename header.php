@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,9 +9,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="JS/jquery-3.5.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 
     <title>Spartan Academy</title>
 
@@ -39,9 +45,30 @@
                         <a class="nav-link" href="?p=paginaPrincipal/#contacto">Contacto</a>
                     </li>
                 </ul>
+                <?php
+                if (!isset($_SESSION['login']['datosUsuario'])) {
+                    echo '<a href="?p=login" type="button" class="btn btn-outline-primary">Iniciar sesion</a><br><br>';
+                    echo '<a href="?p=register" type="button" class="btn btn-primary">Registrarse</a>';
+                } else {
+                ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <?php
+                            echo $_SESSION['login']['datosUsuario']['userName'];
+                            ?>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>
+                    <!-- Falta por terminar(desplegable) -->
 
-                <a href="?p=login" type="button" class="btn btn-outline-primary">Iniciar sesion</a><br><br>
-                <a href="?p=register" type="button" class="btn btn-primary">Registrarse</a>
+                <?php
+                    echo '<a href="?p=cerrarSesion" type="button" class="btn btn-outline-danger">Cerrar sesion</a><br><br>';
+                }
+                ?>
 
             </div>
         </div>

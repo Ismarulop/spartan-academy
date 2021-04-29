@@ -6,8 +6,8 @@ const expresiones = {
     userName: /^[a-z A-Z0-9\_\-]{4,16}/, // Letras, numeros, guion y guion_bajo
     dni: /^\d{8}[a-zA-Z]$/,
     edad: /^.{1,2}$/,
-    pass: /^.{4,12}$/, // 4 a 12 digitos.
-    pass2: /^.{4,12}$/, // 4 a 12 digitos.
+    pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,16}/, // 6 a 16 caracteres, 1 Letra Mayúscula, 1 minuscula,1 caracter especia y no espacios en blanco.
+    pass2: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,16}/, // 6 a 16 caracteres, 1 Letra Mayúscula, 1 minuscula,1 caracter especia y no espacios en blanco.
     correo: /^[a-z A-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-z A-Z0-9-.]+$/, //Letras, numeros, guion y guion_bajo. Seguido de @...
 }
 

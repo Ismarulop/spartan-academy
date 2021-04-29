@@ -20,6 +20,7 @@ CREATE TABLE profesor(
     edad int(50) not null,
     fecha_alta DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     imagen_perfil varchar(300),
+    esProfesor boolean DEFAULT false;
     primary Key (userName)
 );
 CREATE TABLE actividad(

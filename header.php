@@ -14,9 +14,7 @@ session_start();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
-
-    <title>Spartan Academy</title>
-
+    <link rel="stylesheet" href="css/cssHorarios.css">
 
 </head>
 
@@ -36,7 +34,7 @@ session_start();
                         <a class="nav-link" href="?p=paginaClases">Clases</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Horarios</a>
+                        <a class="nav-link" href="?p=horarios">Horarios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="?p=paginaPrincipal/#sobreNosotros">Sobre nosotros</a>

@@ -57,4 +57,18 @@ class Actividad
             return false;
         }
     }
+
+    static function mostrarActividades(){
+        $conectar = conexion::abrir_conexion();
+        $resultado = $conectar->query("Select nombre from Actividad");
+
+        if ($resultado->num_rows >= 1) {
+            $conectar->close();
+            return $resultado;
+        } else {
+            $conectar->close();
+            return false;
+        }
+        
+    }
 }

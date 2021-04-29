@@ -30,6 +30,9 @@
             case 'paginaClases':
                 include "paginaClases.php";
                 break;
+            case 'horarios':
+                include "horarios.php";
+                break;
             case 'cerrarSesion':
                 session_destroy();
                 header("location: index.php?p=paginaPrincipal");

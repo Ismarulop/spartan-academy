@@ -33,7 +33,7 @@ if (isset($_POST['login'])) {
             <input value="a@gmail.com" name="email" type="email" class="form-control" id="email" placeholder="Ej:nombre@gmail.com">
             </div>
             <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                <label for="passLogin" class="form-label">Contraseña</label><br>
                 <input type="password"  name="passLogin" id="passLogin">
             </div>
 

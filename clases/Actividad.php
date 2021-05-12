@@ -7,15 +7,15 @@ class Actividad
     private $codClase;
     private $nombre;
     private $descripcion;
-    private    $id_profesor;
+    private $id_profesor;
     // private	$sala;
-    private    $plazas;
+    private $plazas;
     // private	$hora_comienzo;
     // private	$hora_fin;
 
-    function construirActividad($codClase,$nombre, $descripcion, $plazas,$id_profesor)
+    function construirActividad($codClase, $nombre, $descripcion, $plazas, $id_profesor)
     {
-        $this->codClase=$codClase;
+        $this->codClase = $codClase;
         $this->nombre = $nombre;
         $this->descripcion = $descripcion;
         $this->plazas = $plazas;
@@ -46,7 +46,7 @@ class Actividad
     {
         $conectar = conexion::abrir_conexion();
         $resultado = $conectar->query("Select nombre from Actividad where nombre='$nombre'");
-        
+
         //Contar num filas que devuelve el select
         if ($resultado->num_rows >= 1) {
             $conectar->close();
@@ -58,7 +58,8 @@ class Actividad
         }
     }
 
-    static function mostrarActividades(){
+    static function mostrarActividades()
+    {
         $conectar = conexion::abrir_conexion();
         $resultado = $conectar->query("Select nombre from Actividad");
 
@@ -69,6 +70,5 @@ class Actividad
             $conectar->close();
             return false;
         }
-        
     }
 }

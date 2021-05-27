@@ -43,14 +43,6 @@ if (isset($_POST['crear'])) {
             <label for="nombreClase">Nombre Clase</label>
             <input name="nombreClase" type="text" class="form-control"><br>
             <textarea name="descripcion" id="descripcion" class="form-control" placeholder="Descripcion actividad"></textarea>
-            <label for="plazas">Plazas</label>
-            <div class="form-group col-md-1">
-                <input name="plazas" id="plazas" type="number" class="form-control">
-            </div><br>
-
-            <input name="dia" id="dia" type="date">
-            <input name="horaComienzo" id="horaComienzo" type="time">
-            <input name="horaComienzo" id="horaComienzo" type="time">
 
             <input type="submit" value="Crear" class="btn btn-info btn-block rounded-0 py-2" name="crear">
 
@@ -65,8 +57,8 @@ if (isset($_POST['crear'])) {
 <br><br><br><br>
 <div class="row" id="sobreNosotros">
     <div class="jumbotron">
-        <h1 class="display-4">Hello, world!</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <h1 class="display-4">Sobre Spartan Academy</h1>
+        <p class="lead">Somos un centro deportivo dedicado a las artes marciales. En nuestro centro podras practicar diferentes disciplinas de los mejores profesores.</p>
         <hr class="my-4">
         <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
         <p class="lead">

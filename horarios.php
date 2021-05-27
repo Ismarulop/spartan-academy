@@ -1,12 +1,139 @@
 <!-- <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=Europe%2FMadrid&amp;src=N2d1bXRxNmxma3J1NWVzcDAwaTJpdW9ya2dAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%237CB342&amp;showTitle=1&amp;showCalendars=1" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>    <title>Spartan Academy</title> -->
+
 <?php
+require("clases/Actividad.php");
+require("clases/Horarios.php");
 
-require "clases/Actividad.php";
+// var_dump($_SESSION['login']);
+
+$arrayLunes = [];
+$arrayMartes = [];
+$arrayMiercoles = [];
+$arrayJueves = [];
+$arrayViernes = [];
+
+$horarios = Horarios::mostrarHoraActividades();
+// sleep(2);
+// var_dump($horarios);
+if ($horarios != false) {
+    while ($h = $horarios->fetch_assoc()) {
+        switch ($h['dia']) {
+            case 'Lunes':
+                array_push($arrayLunes, $h);
+                break;
+            case 'Martes':
+                array_push($arrayMartes, $h);
+                break;
+            case 'Miercoles':
+                array_push($arrayMiercoles, $h);
+                break;
+            case 'Jueves':
+                array_push($arrayJueves, $h);
+                break;
+            case 'Viernes':
+                array_push($arrayViernes, $h);
+                break;
+        }
+    }
+}
+if (isset($_POST['reservar'])) {
+    $codHorario = $_POST['codHorario'];
+    $userName = $_SESSION['login']['datosUsuario']['userName'];
+
+    Horarios::reservarActividad($userName, $codHorario);
+}
+
+if (isset($_POST['cancelarReserva'])) {
+    $codHorario = $_POST['codHorario'];
+    $userName = $_SESSION['login']['datosUsuario']['userName'];
+
+    Horarios::cancelarReserva($userName, $codHorario);
+}
+
+if (isset($_POST['insertar'])) {
+    // var_dump($_POST);
+    $errores = [];
+    $nombre = $_POST['nombreActividad'];
+    $diaSemana = $_POST['diaDeLaSemana'];
+    $horaComienzo = $_POST['horaComienzo'];
+    $horaFin = $_POST['horaFin'];
+    $plazas = $_POST['plazas'];
+
+    $horaRellenada = new Horarios();
+    $horaRellenada->construirHoraActividad($nombre, $diaSemana, $horaComienzo, $horaFin, $plazas);
+
+    if (empty($nombre) || empty($diaSemana) || empty($horaComienzo) || empty($horaFin) || empty($plazas)) {
+        array_push($errores, "*Es obligatorio completar todos los campos");
+    }
+
+    if (empty($errores)) {
+        echo "Se ha insertado con éxito la actividad ";
+        $horaRellenada->insertarhoraActividad();
+    } else {
+        echo "Error al insertar la actividad en el horario";
+    }
+}
+
+if (isset($_POST['borrar'])) {
+    Horarios::borrarHoraActividades($_POST['codHorario']);
+}
+?>
 
 
+<?php
+if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_SESSION['login']['datosUsuario']['esProfesor'] == true) {
 
+?>
+    <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Crear clase
+        </a>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            <form id="formInsertarEnHorario" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                <?php
+                $actividades = Actividad::mostrarActividades();
+                if ($actividades == false || empty($actividades)) {
+                    echo "No hay actividades creadas";
+                } else {
+                ?>
+                    <select name="nombreActividad" id="nombreActividad">
+                        <option value="ninguno">Seleccione una actividad</option>
+                        <?php
 
+                        while ($a = $actividades->fetch_assoc()) {
+                            echo "<option id='' value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
+                        }
+                        ?>
 
+                    </select><br><br>
+
+                    <label for="plazas">Plazas</label>
+                    <div class="form-group col-md-1">
+                        <input name="plazas" id="plazas" type="number" class="form-control">
+                    </div><br>
+
+                    <select name="diaDeLaSemana" id="diaDeLaSemana">
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miercoles">Miercoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                    </select>
+                    <input name="horaComienzo" id="horaComienzo" type="time">
+                    <input name="horaFin" id="horaFin" type="time">
+
+                    <input type="submit" value="insertar" class="btn btn-info btn-block rounded-0 py-2" name="insertar">
+                <?php
+                }
+
+                ?>
+            </form>
+        </div>
+    </div>
+<?php
+}
 ?>
 
 
@@ -51,777 +178,204 @@ require "clases/Actividad.php";
                     <span>Lunes</span>
                 </div>
                 <ul>
-                    <li class="single-event" data-start="09:00" data-end="10:30" data-content="event-abs-circuit" data-event="event-1">
-                        <!-- <a href="#0"> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <input type="hidden" name="dia" value="Monday">
-                            <input type="hidden" name="horaComienzo" value="09:00">
-                            <input type="hidden" name="horaFin" value="10:30">
 
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-                                if (isset($_POST['guardar1'])) {
-                                }
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar1">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-                    <li class="single-event" data-start="10:30" data-end="12:00" data-content="event-abs-circuit" data-event="event-2">
-                        <!-- <a href="#0"> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <input type="hidden" name="dia" value="Monday">
-                            <input type="hidden" name="horaComienzo" value="10:30">
-                            <input type="hidden" name="horaFin" value="12:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar2">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-
-                    <li class="single-event" data-start="12:00" data-end="13:30" data-content="event-rowing-workout" data-event="event-3">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Monday">
-                            <input type="hidden" name="horaComienzo" value="12:00">
-                            <input type="hidden" name="horaFin" value="13:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar3">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-
-                    </li>
-
-                    <li class="single-event" data-start="17:00" data-end="18:30" data-content="event-yoga-1" data-event="event-4">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Monday">
-                            <input type="hidden" name="horaComienzo" value="17:00">
-                            <input type="hidden" name="horaFin" value="18:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar4">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                    <li class="single-event" data-start="18:30" data-end="20:00" data-content="event-yoga-1" data-event="event-1">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Monday">
-                            <input type="hidden" name="horaComienzo" value="18:30">
-                            <input type="hidden" name="horaFin" value="20:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar5">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                </ul>
-            </li>
-
-
-            <!-- MARTES -->
-            <li class="events-group">
-
-                <div class="top-info"><span>Martes</span></div>
-
-                <ul>
-                    <li class="single-event" data-start="09:00" data-end="10:30" data-content="event-abs-circuit" data-event="event-3">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Tuesday">
-                            <input type="hidden" name="horaComienzo" value="09:00">
-                            <input type="hidden" name="horaFin" value="10:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar6">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-                    <li class="single-event" data-start="10:30" data-end="12:00" data-content="event-abs-circuit" data-event="event-2">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Tuesday">
-                            <input type="hidden" name="horaComienzo" value="10:30">
-                            <input type="hidden" name="horaFin" value="12:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar7">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-
-                    <li class="single-event" data-start="12:00" data-end="13:30" data-content="event-rowing-workout" data-event="event-1">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Tuesday">
-                            <input type="hidden" name="horaComienzo" value="12:00">
-                            <input type="hidden" name="horaFin" value="13:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar8">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-
-                    </li>
-
-                    <li class="single-event" data-start="17:00" data-end="18:30" data-content="event-yoga-1" data-event="event-3">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Tuesday">
-                            <input type="hidden" name="horaComienzo" value="17:00">
-                            <input type="hidden" name="horaFin" value="18:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar9">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                    <li class="single-event" data-start="18:30" data-end="20:00" data-content="event-yoga-1" data-event="event-2">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Tuesday">
-                            <input type="hidden" name="horaComienzo" value="18:30">
-                            <input type="hidden" name="horaFin" value="20:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar10">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                </ul>
-            </li>
-
-
-            <!-- MIERCOLES -->
-            <li class="events-group">
-                <div class="top-info"><span>Miércoles</span></div>
-
-                <ul>
-                    <li class="single-event" data-start="09:00" data-end="10:30" data-content="event-abs-circuit" data-event="event-1">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Miercoles">
-                            <input type="hidden" name="horaComienzo" value="09:00">
-                            <input type="hidden" name="horaFin" value="10:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar11">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-                    <li class="single-event" data-start="10:30" data-end="12:00" data-content="event-abs-circuit" data-event="event-2">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Miercoles">
-                            <input type="hidden" name="horaComienzo" value="10:30">
-                            <input type="hidden" name="horaFin" value="12:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar12">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-
-                    <li class="single-event" data-start="12:00" data-end="13:30" data-content="event-rowing-workout" data-event="event-3">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Miercoles">
-                            <input type="hidden" name="horaComienzo" value="12:00">
-                            <input type="hidden" name="horaFin" value="13:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar13">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-
-                    </li>
-
-                    <li class="single-event" data-start="17:00" data-end="18:30" data-content="event-yoga-1" data-event="event-2">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Miercoles">
-                            <input type="hidden" name="horaComienzo" value="17:00">
-                            <input type="hidden" name="horaFin" value="18:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar14">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                    <li class="single-event" data-start="18:30" data-end="20:00" data-content="event-yoga-1" data-event="event-1">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Miercoles">
-                            <input type="hidden" name="horaComienzo" value="18:30">
-                            <input type="hidden" name="horaFin" value="20:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar15">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                </ul>
-            </li>
-
-            <!-- JUEVES -->
-            <li class="events-group">
-                <div class="top-info"><span>Jueves</span></div>
-
-                <ul>
-                    <li class="single-event" data-start="09:00" data-end="10:30" data-content="event-abs-circuit" data-event="event-1">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Jueves">
-                            <input type="hidden" name="horaComienzo" value="09:00">
-                            <input type="hidden" name="horaFin" value="10:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar16">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-                    <li class="single-event" data-start="10:30" data-end="12:00" data-content="event-abs-circuit" data-event="event-2">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Jueves">
-                            <input type="hidden" name="horaComienzo" value="10:30">
-                            <input type="hidden" name="horaFin" value="12:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar17">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-
-                    <li class="single-event" data-start="12:00" data-end="13:30" data-content="event-rowing-workout" data-event="event-3">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Jueves">
-                            <input type="hidden" name="horaComienzo" value="12:00">
-                            <input type="hidden" name="horaFin" value="13:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar18">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                    <li class="single-event" data-start="17:00" data-end="18:30" data-content="event-rowing-workout" data-event="event-1">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Jueves">
-                            <input type="hidden" name="horaComienzo" value="17:00">
-                            <input type="hidden" name="horaFin" value="18:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar19">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-
-                    </li>
-                    <li class="single-event" data-start="17:00" data-end="18:30" data-content="event-rowing-workout" data-event="event-2">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Jueves">
-                            <input type="hidden" name="horaComienzo" value="17:00">
-                            <input type="hidden" name="horaFin" value="18:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar20">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-
-                    </li>
-                    <li class="single-event" data-start="18:30" data-end="20:00" data-content="event-rowing-workout" data-event="event-3">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Jueves">
-                            <input type="hidden" name="horaComienzo" value="18:30">
-                            <input type="hidden" name="horaFin" value="20:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar21">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-
-                    </li>
-                </ul>
-
-                <!-- VIERNES -->
-            <li class="events-group">
-                <div class="top-info"><span>Viernes</span></div>
-
-                <ul>
-                    <li class="single-event" data-start="09:00" data-end="10:30" data-content="event-abs-circuit" data-event="event-1">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Viernes">
-                            <input type="hidden" name="horaComienzo" value="09:00">
-                            <input type="hidden" name="horaFin" value="10:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar22">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-                    <li class="single-event" data-start="10:30" data-end="12:00" data-content="event-abs-circuit" data-event="event-2">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Viernes">
-                            <input type="hidden" name="horaComienzo" value="10:30">
-                            <input type="hidden" name="horaFin" value="12:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar23">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                        <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-                        <!-- </a> -->
-                    </li>
-
-                    <li class="single-event" data-start="12:00" data-end="13:30" data-content="event-rowing-workout" data-event="event-3">
-                        <!-- <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Viernes">
-                            <input type="hidden" name="horaComienzo" value="12:00">
-                            <input type="hidden" name="horaFin" value="13:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar24">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-
-                    </li>
-
-                    <li class="single-event" data-start="17:00" data-end="18:30" data-content="event-yoga-1" data-event="event-2">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Viernes">
-                            <input type="hidden" name="horaComienzo" value="17:00">
-                            <input type="hidden" name="horaFin" value="18:30">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar25">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                    <li class="single-event" data-start="18:30" data-end="20:00" data-content="event-yoga-1" data-event="event-1">
-                        <!-- <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a> -->
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>?p=horarios" method="POST">
-                            <!-- <a href="#0"> -->
-                            <input type="hidden" name="dia" value="Viernes">
-                            <input type="hidden" name="horaComienzo" value="18:30">
-                            <input type="hidden" name="horaFin" value="20:00">
-
-                            <select name="actividades" id="actividades">
-                                <option value="ninguno">Ninguno</option>
-                                <?php
-                                $actividades = Actividad::mostrarActividades();
-
-                                while ($a = $actividades->fetch_assoc()) {
-                                    echo "<option id='' value='" . $a['nombre'] . "'>" . $a['nombre'] . "</option>";
-                                }
-                                ?>
-
-                            </select>
-
-                            <input type="hidden" name="guardar26">
-                            <button type="submit" name="guardar">Guardar</button>
-                        </form>
-                    </li>
-                </ul>
+                    <?php
+                    foreach ($arrayLunes as $h) {
+                        // var_dump($h);
+                        echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
+                        sleep(1);
+                        echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
+                        if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+                    ?>
+                            <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
+                            </form>
+
+                            <?php
+                        }
+                        if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
+                            if (Horarios::estaReservada($_SESSION['login']['datosUsuario']['userName'], $h['codHorario'])) {
+                            ?>
+                                <form id="cancelarReserva" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                    <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                    <input type="submit" value="cancelarReserva" class="btn btn-danger btn-block rounded-0 py-2" name="cancelarReserva">
+                                </form>
+                            <?php
+                            } else {
+                            ?>
+                                <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                    <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                    <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
+                                </form>
+                    <?php
+                            }
+                        }
+                    }
+                    ?>
             </li>
 
 
 
 
-            <!--        -->
-            <li class="events-group">
-                <div class="top-info"><span>Sábado</span></div>
-                <ul>
-                    <!-- <li class="single-event" data-start="09:30" data-end="10:30" data-content="event-abs-circuit" data-event="event-1">
-                            <a href="#0">
-                                <em class="event-name">Abs Circuit</em>
-                            </a>
-                        </li>
 
-                        <li class="single-event" data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2">
-                            <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a>
-                        </li>
+            <!-- <a href="#0"> -->
+            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
+            <!-- </a> -->
 
-                        <li class="single-event" data-start="14:00" data-end="15:15" data-content="event-yoga-1" data-event="event-3">
-                            <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a>
-                        </li> -->
-                </ul>
-            </li>
-            <!--        -->
+            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
+            <!-- </a> -->
 
-            <!--        -->
-            <li class="events-group">
-                <div class="top-info"><span>Domingo</span></div>
-                <ul>
-                    <!-- <li class="single-event" data-start="09:30" data-end="10:30" data-content="event-abs-circuit" data-event="event-1">
-                            <a href="#0">
-                                <em class="event-name">Abs Circuit</em>
-                            </a>
-                        </li>
 
-                        <li class="single-event" data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2">
-                            <a href="#0">
-                                <em class="event-name">Rowing Workout</em>
-                            </a>
-                        </li>
 
-                        <li class="single-event" data-start="14:00" data-end="15:15" data-content="event-yoga-1" data-event="event-3">
-                            <a href="#0">
-                                <em class="event-name">Yoga Level 1</em>
-                            </a>
-                        </li> -->
-                </ul>
-            </li>
+
+        </ul>
+        </li>
+
+
+        <!-- MARTES -->
+        <li class="events-group">
+
+            <div class="top-info"><span>Martes</span></div>
+
+            <ul>
+                <?php
+                foreach ($arrayMartes as $h) {
+                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
+                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
+
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+                ?>
+                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
+                        </form>
+
+                    <?php
+                    }
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
+                    ?>
+                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
+                        </form>
+                <?php
+                    }
+                }
+                ?>
+            </ul>
+        </li>
+
+        <!-- MIERCOLES -->
+        <li class="events-group">
+            <div class="top-info">
+                <span>Miercoles</span>
+            </div>
+            <ul>
+                <?php
+                foreach ($arrayMiercoles as $h) {
+                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
+                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+                ?>
+                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
+                        </form>
+
+                    <?php
+                    }
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
+                    ?>
+                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
+                        </form>
+                <?php
+                    }
+                }
+                ?>
+            </ul>
+
+            <!-- <a href="#0"> -->
+
+
+
+
+            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
+            <!-- </a> -->
+
+            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
+            <!-- </a> -->
+
+
+        </li>
+        <!-- JUEVES -->
+        <li class="events-group">
+            <div class="top-info"><span>Jueves</span></div>
+
+            <ul>
+                <?php
+                foreach ($arrayJueves as $h) {
+                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
+                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+                ?>
+                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
+                        </form>
+
+                    <?php
+                    }
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
+                    ?>
+                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
+                        </form>
+                <?php
+                    }
+                }
+                ?>
+
+
+            </ul>
+        </li>
+        <!-- VIERNES -->
+        <li class="events-group">
+            <div class="top-info"><span>Viernes</span></div>
+
+            <ul>
+                <?php
+                foreach ($arrayViernes as $h) {
+                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
+                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+                ?>
+                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
+                        </form>
+
+                    <?php
+                    }
+                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
+                    ?>
+                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
+                        </form>
+                <?php
+                    }
+                }
+                ?>
+
+            </ul>
+        </li>
+
+
+
         </ul>
     </div>
 
@@ -849,19 +403,3 @@ require "clases/Actividad.php";
 <br><br><br>
 <br><br><br>
 <br><br><br>
-
-<?php
-if (isset($_POST['guardar'])) {
-    $actividades = $_POST['actividades'];
-    $actividad = $_POST['actividades']['nombre'];
-    var_dump($_POST);
-
-    // $actividad=new Actividad();
-    // $codClase=obtenerCodClase($nombre);
-    // $actividad->construirActividad($codClase,$nombre, $descripcion, $plazas,$id_profesor,	$hora_comienzo,$hora_fin)
-
-    $dia = $_POST['dia'];
-    $horaComienzo = $_POST['horaComienzo'];
-    $horaFin = $_POST['horaFin'];
-}
-?>

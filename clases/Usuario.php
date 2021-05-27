@@ -1,7 +1,5 @@
 <?php
 
-require ("Conexion.php");
-
 class Usuario{
     private $userName;
     private $nombre;
@@ -148,4 +146,8 @@ function comprobarSiExisteDni($dni)
 
         return $nombre;
     }
+
+    // function reservarActividad(){
+
+    // }
 }

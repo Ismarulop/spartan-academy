@@ -1,10 +1,16 @@
 <!-- Modificar y añadir tantas cartas como artes marciales -->
+<?php
+    require ("Clases/Actividad.php");
+    $actvidades=new Actividad();
+    $actvidades->mostrarActividades();
+    var_dump($actvidades);
+?>
 <div class="row">
     <div class="col-md-4">
         <div class="card">
             <img class="card-img-top" src="imagenes/slider/slider1.jpg" width="200" height="400" alt="Card image cap">
             <div class="card-body">
-                <h5 class="card-title">Card title</h5>
+                <h5 class="card-title"><?php $actvidades-> getNombre()?></h5>
                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             </div>
             <div class="card-footer">

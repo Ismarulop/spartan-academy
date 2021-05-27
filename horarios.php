@@ -6,7 +6,10 @@ require("clases/Horarios.php");
 
 
 $horario = [];
-$diasSemana = ["Lunes" => array(), "Martes" => array(), "Miercoles" => array(), "Jueves" => array(), "Viernes" => array()];
+$diasSemana = [
+    "Lunes" => array(), "Martes" => array(), "Miercoles" => array(), "Jueves" => array(), "Viernes" => array(),
+    "Sabado" => array(), "Domingo" => array(),
+];
 
 
 if (isset($_POST['reservar'])) {
@@ -55,8 +58,8 @@ if (isset($_POST['borrar'])) {
 $horarios = Horarios::mostrarHoraActividades();
 
 if ($horarios != false) {
-    while ($h = $horarios->fetch_assoc()) {     
-        $dia = $h["dia"];        
+    while ($h = $horarios->fetch_assoc()) {
+        $dia = $h["dia"];
         array_push($diasSemana[$dia], $h);
     }
 }
@@ -96,11 +99,12 @@ if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_
                     </div><br>
 
                     <select name="diaDeLaSemana" id="diaDeLaSemana">
-                        <option value="Lunes">Lunes</option>
-                        <option value="Martes">Martes</option>
-                        <option value="Miercoles">Miercoles</option>
-                        <option value="Jueves">Jueves</option>
-                        <option value="Viernes">Viernes</option>
+                        <?php
+                            foreach ($diasSemana as $key => $value) {
+                                echo "<option value='" . $key . "'>" . $key . "</option>";                               
+                            }
+                        
+                        ?>
                     </select>
                     <input name="horaComienzo" id="horaComienzo" type="time">
                     <input name="horaFin" id="horaFin" type="time">
@@ -118,117 +122,110 @@ if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_
 ?>
 
 
-<script  defer src="JS/horarios.js"></script>
+<script defer src="JS/horarios.js"></script>
 <br />
+<div class="col-md-9">
 
-<div class="cd-schedule loading">
-    <div class="timeline">
-        <ul>
-            <li><span>09:00</span></li>
-            <li><span>09:30</span></li>
-            <li><span>10:00</span></li>
-            <li><span>10:30</span></li>
-            <li><span>11:00</span></li>
-            <li><span>11:30</span></li>
-            <li><span>12:00</span></li>
-            <li><span>12:30</span></li>
-            <li><span>13:00</span></li>
-            <li><span>13:30</span></li>
-            <li><span>14:00</span></li>
-            <li><span>14:30</span></li>
-            <li><span>15:00</span></li>
-            <li><span>15:30</span></li>
-            <li><span>16:00</span></li>
-            <li><span>16:30</span></li>
-            <li><span>17:00</span></li>
-            <li><span>17:30</span></li>
-            <li><span>18:00</span></li>
-            <li><span>18:30</span></li>
-            <li><span>19:00</span></li>
-            <li><span>19:30</span></li>
-            <li><span>20:00</span></li>
-        </ul>
-    </div> <!-- .timeline -->
+    <div class="cd-schedule loading">
+        <div class="timeline">
+            <ul>
+                <li><span>09:00</span></li>
+                <li><span>09:30</span></li>
+                <li><span>10:00</span></li>
+                <li><span>10:30</span></li>
+                <li><span>11:00</span></li>
+                <li><span>11:30</span></li>
+                <li><span>12:00</span></li>
+                <li><span>12:30</span></li>
+                <li><span>13:00</span></li>
+                <li><span>13:30</span></li>
+                <li><span>14:00</span></li>
+                <li><span>14:30</span></li>
+                <li><span>15:00</span></li>
+                <li><span>15:30</span></li>
+                <li><span>16:00</span></li>
+                <li><span>16:30</span></li>
+                <li><span>17:00</span></li>
+                <li><span>17:30</span></li>
+                <li><span>18:00</span></li>
+                <li><span>18:30</span></li>
+                <li><span>19:00</span></li>
+                <li><span>19:30</span></li>
+                <li><span>20:00</span></li>
+            </ul>
+        </div> <!-- .timeline -->
 
-    <div class="events">
-        <ul class="wrap">
+        <div class="events">
+            <ul class="wrap">
 
-            <!-- LUNES -->
+                <!-- LUNES -->
 
-            <?php foreach ($diasSemana as $dia => $arrayDia) {     ?>
+                <?php foreach ($diasSemana as $dia => $arrayDia) {     ?>
 
-                <li class="events-group">
-                    <div class="top-info">
-                        <span><?php echo $dia ?></span>
-                    </div>
-                    <ul>
+                    <li class="events-group">
+                        <div class="top-info">
+                            <span><?php echo $dia ?></span>
+                        </div>
+                        <ul>
 
-                        <?php
-                        foreach ($arrayDia as $h) {
-                            echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
-                            echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
-                            if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-                        ?>
-                                <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                                    <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                                    <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
-                                </form>
-
-                                <?php
-                            }
-                            if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
-                                if (Horarios::estaReservada($_SESSION['login']['datosUsuario']['userName'], $h['codHorario'])) {
-                                ?>
-                                    <form id="cancelarReserva" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                            <?php
+                            foreach ($arrayDia as $h) {
+                                echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
+                                echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
+                                if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+                            ?>
+                                    <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
                                         <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                                        <input type="submit" value="cancelarReserva" class="btn btn-danger btn-block rounded-0 py-2" name="cancelarReserva">
+                                        <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
                                     </form>
-                                <?php
-                                } else {
-                                ?>
-                                    <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                                        <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                                        <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
-                                    </form>
-                        <?php
+
+                                    <?php
+                                }
+                                if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
+                                    if (Horarios::estaReservada($_SESSION['login']['datosUsuario']['userName'], $h['codHorario'])) {
+                                    ?>
+                                        <form id="cancelarReserva" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                            <input type="submit" value="cancelarReserva" class="btn btn-danger btn-block rounded-0 py-2" name="cancelarReserva">
+                                        </form>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
+                                        </form>
+                            <?php
+                                    }
                                 }
                             }
-                        }
-                        ?>
-                </li>
+                            ?>
+                    </li>
+            </ul>
+            </li>
+        <?php  } ?>
+
+        <ul class="events-group nover">
+            <div class="top-info">Hello</div>
+            <ul>
+            </ul>
         </ul>
-        </li>
-    <?php  } ?>
+        <ul class="events-group nover">
+            <div class="top-info">Hello</div>
+            <ul>
+            </ul>
+        </ul>
 
 
 
 
-
-
-    </ul>
-    </div>
-
-    <div class="event-modal">
-        <header class="header">
-            <div class="content">
-                <span class="event-date"></span>
-                <h3 class="event-name"></h3>
-            </div>
-
-            <div class="header-bg"></div>
-        </header>
-
-        <div class="body">
-            <div class="event-info"></div>
-            <div class="body-bg"></div>
+        </ul>
         </div>
 
-        <a href="#0" class="close">Close</a>
+
     </div>
+    <div class="col-md-3"></div>
 
-    <div class="cover-layer"></div>
-</div> <!-- .cd-schedule -->
-
-<br><br><br>
-<br><br><br>
-<br><br><br>
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>

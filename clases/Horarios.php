@@ -70,14 +70,14 @@ class Horarios
     static function mostrarHoraActividades()
     {
         $conectar = conexion::abrir_conexion();
-        // $resultado = $conectar->query("Select *,(Select count(codReserva) from reserva where codHorario=horarios.codHorario) as plazasReservadas from Horarios");
-        $resultado = $conectar->query("Select horarios.*,count(reserva.codReserva) as plazasReservadas from Horarios inner join reserva on reserva.codHorario=horarios.codHorario");
+        $resultado = $conectar->query("Select *,(Select count(*) from reserva where codHorario=horarios.codHorario) as plazasReservadas from Horarios");
+        // $resultado = $conectar->query("Select horarios.*,count(reserva.codReserva) as plazasReservadas from Horarios inner join reserva on reserva.codHorario=horarios.codHorario");
         echo $conectar->error;
         if ($resultado->num_rows >= 1) {
-            $conectar->close();
+            // $conectar->close();
             return $resultado;
         } else {
-            $conectar->close();
+            // $conectar->close();
             return false;
         }
     }
@@ -101,11 +101,11 @@ class Horarios
         $conectar = conexion::abrir_conexion();
         if (Horarios::estaReservada($userName, $codHorario)) {
             echo "Ya ha reservado";
-            $conectar->close();
+            // $conectar->close();
             return false;
         } else {
             $resultado = $conectar->query("Insert into reserva (userName, codHorario) values('$userName','$codHorario')");
-            $conectar->close();
+            // $conectar->close();
             return $resultado;
         }
     }
@@ -131,6 +131,19 @@ class Horarios
         } else {
             $conectar->close();
             return false;
+        }
+    }
+
+    static function mostrarListadeAlumnosListados($codHorario){
+        $conectar = conexion::abrir_conexion();
+        $resultado=$conectar->query("Select nombre, apellidos,reserva.fecha from usuario inner join reserva on usuario.userName=reserva.userName where reserva.codHorario='$codHorario'");
+        $conectar->close();
+        if ($resultado->num_rows>0) {
+            return $resultado;
+           
+        } else {
+            return false;
+            
         }
     }
 }

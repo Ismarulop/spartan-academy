@@ -5,16 +5,14 @@ if (isset($_POST['crear'])) {
     $errores = [];
     $nombre = $_POST['nombreClase'];
     $descripcion = $_POST['descripcion'];
-    $plazas = $_POST['plazas'];
-    $id_profesor = $_SESSION['login']['datosUsuario']['userName'];
-
+    $id_profesor = $_SESSION['login']['datosUsuario']['userName'];    
     $codClase = $nombre . "1"; //Mejorar luego
 
 
     $actividad = new Actividad();
-    $actividad->construirActividad($codClase, $nombre, $descripcion, $plazas, $id_profesor);
+    $actividad->construirActividad($codClase, $nombre, $descripcion, $id_profesor);
 
-    if (empty($nombre) || empty($descripcion) || empty($plazas)) {
+    if (empty($nombre) || empty($descripcion)) {
         array_push($errores, "*Es obligatorio completar todos los campos");
     } else {
         if ($actividad->existeActividad($nombre)) {
@@ -24,7 +22,7 @@ if (isset($_POST['crear'])) {
     if (empty($errores)) {
         echo "Se ha creado con éxito la actividad de " . $nombre;
         $actividad->insertarActividad();
-    } else {
+    } else {        
         echo "Error al crear la actividad";
     }
 }

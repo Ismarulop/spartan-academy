@@ -210,10 +210,10 @@ jQuery(document).ready(function($) {
                 event.removeClass('selected-event');
             });
         } else {
-            var eventTop = event.offset().top - $(window).scrollTop(),
-                eventLeft = event.offset().left,
-                eventHeight = event.innerHeight(),
-                eventWidth = event.innerWidth();
+            // var eventTop = event.offset().top - $(window).scrollTop(),
+            //     eventLeft = event.offset().left,
+            //     eventHeight = event.innerHeight(),
+            //     eventWidth = event.innerWidth();
 
             var modalTop = Number(self.modal.css('top').replace('px', '')),
                 modalLeft = Number(self.modal.css('left').replace('px', ''));
@@ -369,13 +369,13 @@ jQuery(document).ready(function($) {
         return timeStamp;
     }
 
-    function transformElement(element, value) {
-        element.css({
-            '-moz-transform': value,
-            '-webkit-transform': value,
-            '-ms-transform': value,
-            '-o-transform': value,
-            'transform': value
-        });
-    }
+    // function transformElement(element, value) {
+    //     element.css({
+    //         '-moz-transform': value,
+    //         '-webkit-transform': value,
+    //         '-ms-transform': value,
+    //         '-o-transform': value,
+    //         'transform': value
+    //     });
+    // }
 });

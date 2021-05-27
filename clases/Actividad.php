@@ -8,16 +8,14 @@ class Actividad
     private $descripcion;
     private $id_profesor;
     // private	$sala;
-    private $plazas;
     // private	$hora_comienzo;
     // private	$hora_fin;
 
-    function construirActividad($codClase, $nombre, $descripcion, $plazas, $id_profesor)
+    function construirActividad($codClase, $nombre, $descripcion, $id_profesor)
     {
         $this->codClase = $codClase;
         $this->nombre = $nombre;
-        $this->descripcion = $descripcion;
-        $this->plazas = $plazas;
+        $this->descripcion = $descripcion;      
         $this->id_profesor = $id_profesor;
     }
 
@@ -37,7 +35,7 @@ class Actividad
     function insertarActividad()
     {
         $conectar = conexion::abrir_conexion();
-        $conectar->query("Insert into Actividad (codClase,nombre,descripcion,plazas,id_profesor) values('$this->codClase','$this->nombre','$this->descripcion','$this->plazas','$this->id_profesor')");
+        $conectar->query("Insert into Actividad (codClase,nombre,descripcion,id_profesor) values('$this->codClase','$this->nombre','$this->descripcion','$this->id_profesor')");
         $conectar->close();
     }
 

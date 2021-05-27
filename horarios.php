@@ -4,38 +4,13 @@
 require("clases/Actividad.php");
 require("clases/Horarios.php");
 
-// var_dump($_SESSION['login']);
 
-$arrayLunes = [];
-$arrayMartes = [];
-$arrayMiercoles = [];
-$arrayJueves = [];
-$arrayViernes = [];
+$horario = [];
+$diasSemana = [
+    "Lunes" => array(), "Martes" => array(), "Miercoles" => array(), "Jueves" => array(), "Viernes" => array(),
+    "Sabado" => array(), "Domingo" => array(),
+];
 
-$horarios = Horarios::mostrarHoraActividades();
-// sleep(2);
-// var_dump($horarios);
-if ($horarios != false) {
-    while ($h = $horarios->fetch_assoc()) {
-        switch ($h['dia']) {
-            case 'Lunes':
-                array_push($arrayLunes, $h);
-                break;
-            case 'Martes':
-                array_push($arrayMartes, $h);
-                break;
-            case 'Miercoles':
-                array_push($arrayMiercoles, $h);
-                break;
-            case 'Jueves':
-                array_push($arrayJueves, $h);
-                break;
-            case 'Viernes':
-                array_push($arrayViernes, $h);
-                break;
-        }
-    }
-}
 if (isset($_POST['reservar'])) {
     $codHorario = $_POST['codHorario'];
     $userName = $_SESSION['login']['datosUsuario']['userName'];
@@ -69,6 +44,7 @@ if (isset($_POST['insertar'])) {
     if (empty($errores)) {
         echo "Se ha insertado con éxito la actividad ";
         $horaRellenada->insertarhoraActividad();
+        // header("location:" . $_SERVER["PHP_SELF"] . "?p=horarios");
     } else {
         echo "Error al insertar la actividad en el horario";
     }
@@ -77,10 +53,17 @@ if (isset($_POST['insertar'])) {
 if (isset($_POST['borrar'])) {
     Horarios::borrarHoraActividades($_POST['codHorario']);
 }
-?>
+
+$horarios = Horarios::mostrarHoraActividades();
+
+if ($horarios != false) {
+    while ($h = $horarios->fetch_assoc()) {
+        $dia = $h["dia"];
+        array_push($diasSemana[$dia], $h);
+    }
+}
 
 
-<?php
 if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_SESSION['login']['datosUsuario']['esProfesor'] == true) {
 
 ?>
@@ -115,11 +98,12 @@ if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_
                     </div><br>
 
                     <select name="diaDeLaSemana" id="diaDeLaSemana">
-                        <option value="Lunes">Lunes</option>
-                        <option value="Martes">Martes</option>
-                        <option value="Miercoles">Miercoles</option>
-                        <option value="Jueves">Jueves</option>
-                        <option value="Viernes">Viernes</option>
+                        <?php
+                        foreach ($diasSemana as $key => $value) {
+                            echo "<option value='" . $key . "'>" . $key . "</option>";
+                        }
+
+                        ?>
                     </select>
                     <input name="horaComienzo" id="horaComienzo" type="time">
                     <input name="horaFin" id="horaFin" type="time">
@@ -137,269 +121,147 @@ if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_
 ?>
 
 
-<script src="JS/horarios.js"></script>
+<script defer src="JS/horarios.js"></script>
 <br />
+<div class="row">
+    <div class="col-md-9">
 
-<div class="cd-schedule loading">
-    <div class="timeline">
-        <ul>
-            <li><span>09:00</span></li>
-            <li><span>09:30</span></li>
-            <li><span>10:00</span></li>
-            <li><span>10:30</span></li>
-            <li><span>11:00</span></li>
-            <li><span>11:30</span></li>
-            <li><span>12:00</span></li>
-            <li><span>12:30</span></li>
-            <li><span>13:00</span></li>
-            <li><span>13:30</span></li>
-            <li><span>14:00</span></li>
-            <li><span>14:30</span></li>
-            <li><span>15:00</span></li>
-            <li><span>15:30</span></li>
-            <li><span>16:00</span></li>
-            <li><span>16:30</span></li>
-            <li><span>17:00</span></li>
-            <li><span>17:30</span></li>
-            <li><span>18:00</span></li>
-            <li><span>18:30</span></li>
-            <li><span>19:00</span></li>
-            <li><span>19:30</span></li>
-            <li><span>20:00</span></li>
-        </ul>
-    </div> <!-- .timeline -->
-
-    <div class="events">
-        <ul class="wrap">
-
-            <!-- LUNES -->
-            <li class="events-group">
-                <div class="top-info">
-                    <span>Lunes</span>
-                </div>
+        <div class="cd-schedule loading">
+            <div class="timeline">
                 <ul>
+                    <li><span>09:00</span></li>
+                    <li><span>09:30</span></li>
+                    <li><span>10:00</span></li>
+                    <li><span>10:30</span></li>
+                    <li><span>11:00</span></li>
+                    <li><span>11:30</span></li>
+                    <li><span>12:00</span></li>
+                    <li><span>12:30</span></li>
+                    <li><span>13:00</span></li>
+                    <li><span>13:30</span></li>
+                    <li><span>14:00</span></li>
+                    <li><span>14:30</span></li>
+                    <li><span>15:00</span></li>
+                    <li><span>15:30</span></li>
+                    <li><span>16:00</span></li>
+                    <li><span>16:30</span></li>
+                    <li><span>17:00</span></li>
+                    <li><span>17:30</span></li>
+                    <li><span>18:00</span></li>
+                    <li><span>18:30</span></li>
+                    <li><span>19:00</span></li>
+                    <li><span>19:30</span></li>
+                    <li><span>20:00</span></li>
+                </ul>
+            </div> <!-- .timeline -->
 
-                    <?php
-                    foreach ($arrayLunes as $h) {
-                        // var_dump($h);
-                        echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
-                        sleep(1);
-                        echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
-                        if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-                    ?>
-                            <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                                <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                                <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
-                            </form>
+            <div class="events">
+                <ul class="wrap">
 
-                            <?php
-                        }
-                        if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
-                            if (Horarios::estaReservada($_SESSION['login']['datosUsuario']['userName'], $h['codHorario'])) {
-                            ?>
-                                <form id="cancelarReserva" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                                    <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                                    <input type="submit" value="cancelarReserva" class="btn btn-danger btn-block rounded-0 py-2" name="cancelarReserva">
-                                </form>
-                            <?php
-                            } else {
-                            ?>
-                                <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                                    <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                                    <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
-                                </form>
-                    <?php
-                            }
-                        }
-                    }
-                    ?>
-            </li>
+                    <!-- LUNES -->
 
+                    <?php foreach ($diasSemana as $dia => $arrayDia) {     ?>
 
+                        <li class="events-group">
+                            <div class="top-info">
+                                <span><?php echo $dia ?></span>
+                            </div>
+                            <ul>
 
+                                <?php
+                                foreach ($arrayDia as $h) {
+                                    echo '<li onClick="mostrarLista(\'' . $h['codHorario'] . '\')" class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
+                                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
+                                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+                                ?>
+                                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
+                                        </form>
 
+                                        <?php
+                                    }
+                                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
+                                        if (Horarios::estaReservada($_SESSION['login']['datosUsuario']['userName'], $h['codHorario'])) {
+                                        ?>
+                                            <form id="cancelarReserva" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                                <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                                <input type="submit" value="cancelarReserva" class="btn btn-danger btn-block rounded-0 py-2" name="cancelarReserva">
+                                            </form>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
+                                                <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
+                                                <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
+                                            </form>
+                                <?php
+                                        }
+                                    }
+                                }
+                                ?>
+                        </li>
+                </ul>
+                </li>
+            <?php  } ?>
 
-            <!-- <a href="#0"> -->
-            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-            <!-- </a> -->
-
-            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-            <!-- </a> -->
-
-
-
-
-        </ul>
-        </li>
-
-
-        <!-- MARTES -->
-        <li class="events-group">
-
-            <div class="top-info"><span>Martes</span></div>
-
-            <ul>
-                <?php
-                foreach ($arrayMartes as $h) {
-                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
-                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
-
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-                ?>
-                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
-                        </form>
-
-                    <?php
-                    }
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
-                    ?>
-                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
-                        </form>
-                <?php
-                    }
-                }
-                ?>
+            <ul class="events-group nover">
+                <div class="top-info">Hello</div>
+                <ul>
+                </ul>
             </ul>
-        </li>
+            <ul class="events-group nover">
+                <div class="top-info">Hello</div>
+                <ul>
+                </ul>
+            </ul>
 
-        <!-- MIERCOLES -->
-        <li class="events-group">
-            <div class="top-info">
-                <span>Miercoles</span>
+
+
+
+            </ul>
             </div>
-            <ul>
-                <?php
-                foreach ($arrayMiercoles as $h) {
-                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
-                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-                ?>
-                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
-                        </form>
-
-                    <?php
-                    }
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
-                    ?>
-                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
-                        </form>
-                <?php
-                    }
-                }
-                ?>
-            </ul>
-
-            <!-- <a href="#0"> -->
-
-
-
-
-            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-            <!-- </a> -->
-
-            <!-- <em style="color:black" class="event-name">Abs Circuit</em> -->
-            <!-- </a> -->
-
-
-        </li>
-        <!-- JUEVES -->
-        <li class="events-group">
-            <div class="top-info"><span>Jueves</span></div>
-
-            <ul>
-                <?php
-                foreach ($arrayJueves as $h) {
-                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
-                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-                ?>
-                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
-                        </form>
-
-                    <?php
-                    }
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
-                    ?>
-                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
-                        </form>
-                <?php
-                    }
-                }
-                ?>
-
-
-            </ul>
-        </li>
-        <!-- VIERNES -->
-        <li class="events-group">
-            <div class="top-info"><span>Viernes</span></div>
-
-            <ul>
-                <?php
-                foreach ($arrayViernes as $h) {
-                    echo '<li class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
-                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-                ?>
-                        <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
-                        </form>
-
-                    <?php
-                    }
-                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
-                    ?>
-                        <form id="reservarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
-                            <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                            <input type="submit" value="Reservar" class="btn btn-info btn-block rounded-0 py-2" name="reservar">
-                        </form>
-                <?php
-                    }
-                }
-                ?>
-
-            </ul>
-        </li>
-
-
-
-        </ul>
-    </div>
-
-    <div class="event-modal">
-        <header class="header">
-            <div class="content">
-                <span class="event-date"></span>
-                <h3 class="event-name"></h3>
-            </div>
-
-            <div class="header-bg"></div>
-        </header>
-
-        <div class="body">
-            <div class="event-info"></div>
-            <div class="body-bg"></div>
         </div>
-
-        <a href="#0" class="close">Close</a>
     </div>
 
-    <div class="cover-layer"></div>
-</div> <!-- .cd-schedule -->
+
+    <div class="col-md-3">
+        <?php
+        if (isset($_GET['codHorario'])) {
+            // var_dump($_GET['codHorario']);
+            $lista = Horarios::mostrarListadeAlumnosListados($_GET['codHorario']);
+            if (!$lista) {
+                echo '<div class="alert alert-info" role="alert">';
+                echo 'No hay alumnos apuntados';
+                echo ' </div>';
+            } else {
+                echo '<ul class="list-group list-group-flush">';
+                echo '<li class="alert alert-primary"> <b>Listado de alumnos</b></li>';
+                while ($a = $lista->fetch_assoc()) {
+
+                    echo  '<li class="list-group-item alumnoLista"><span class="nombreLista">' . $a['nombre'] . " " . $a['apellidos'] . '</span><small class="text-muted small">'.$a['fecha'].' </small><span>❌</span></li>';
+                }
+
+                echo '<button class="btn btn-outline-danger"> Descargar <i class="fas fa-file-pdf"></i></button>';
+                echo '</ul>';
+        ?>
+
+        <?php
+            }
+        }
+
+        ?>
+
+    </div>
+</div>
 
 <br><br><br>
 <br><br><br>
 <br><br><br>
+
+<script>
+    function mostrarLista(codHorario) {
+        location.href = "?p=horarios&codHorario=" + codHorario;
+
+    }
+</script>

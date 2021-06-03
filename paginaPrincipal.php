@@ -46,7 +46,7 @@
   </div>
 </div>
 <div class="row" id="contacto">
-  <form action="mail.php" method="post">
+  <form action="mailto:spartan.academy12@gmail.com" method="post">
     <div class="card border-primary rounded-0">
       <div class="card-header p-0">
         <div class="bg-info text-white text-center py-2">

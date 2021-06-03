@@ -31,6 +31,7 @@ CREATE TABLE actividad(
     sala varchar(20) not null,
     hora_comienzo TIMESTAMP not null,
     hora_fin TIMESTAMP not null,
+    img varchar(300),
     primary Key (nombre),
     foreign Key (id_profesor) references profesor(userName)
 );

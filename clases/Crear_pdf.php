@@ -70,4 +70,4 @@ foreach ($result as $row) {
 }
 $pdf->Output($dest='/pdf/listaAlumnos.pdf', $name='listaAlumnos.pdf', false);
 ob_end_flush();
-?>
+?> 

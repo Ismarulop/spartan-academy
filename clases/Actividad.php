@@ -11,12 +11,13 @@ class Actividad
     // private	$hora_comienzo;
     // private	$hora_fin;
 
-    function construirActividad($codClase, $nombre, $descripcion, $id_profesor)
+    function construirActividad($codClase, $nombre, $descripcion, $id_profesor,$imgActividad)
     {
         $this->codClase = $codClase;
         $this->nombre = $nombre;
         $this->descripcion = $descripcion;      
         $this->id_profesor = $id_profesor;
+        $this->imgActividad = $imgActividad;
     }
 
     function getNombre()
@@ -35,7 +36,7 @@ class Actividad
     function insertarActividad()
     {
         $conectar = conexion::abrir_conexion();
-        $conectar->query("Insert into Actividad (codClase,nombre,descripcion,id_profesor) values('$this->codClase','$this->nombre','$this->descripcion','$this->id_profesor')");
+        $conectar->query("Insert into Actividad (codClase,nombre,descripcion,id_profesor,img) values('$this->codClase','$this->nombre','$this->descripcion','$this->id_profesor','$this->imgActividad')");
         $conectar->close();
     }
 
@@ -58,7 +59,7 @@ class Actividad
     static function mostrarActividades()
     {
         $conectar = conexion::abrir_conexion();
-        $resultado = $conectar->query("Select nombre from Actividad");
+        $resultado = $conectar->query("Select * from Actividad");
 
         if ($resultado->num_rows >= 1) {
             $conectar->close();
@@ -68,4 +69,6 @@ class Actividad
             return false;
         }
     }
+
+    
 }

@@ -1,16 +1,35 @@
 <?php
 require("clases/Actividad.php");
 
+function validarSubidaArchivos(){
+    if(!isset($_FILES["imgActividad"])) return false;
+    $tipo =  explode("/",$_FILES["imgActividad"]["type"])[0];
+    if($tipo != "image") return false;
+    return true;
+}
+
 if (isset($_POST['crear'])) {
     $errores = [];
     $nombre = $_POST['nombreClase'];
     $descripcion = $_POST['descripcion'];
+    $imgActividad=null;
     $id_profesor = $_SESSION['login']['datosUsuario']['userName'];    
     $codClase = $nombre . "1"; //Mejorar luego
 
+    if(validarSubidaArchivos()){
+        $tmp = $_FILES["imgActividad"]["tmp_name"];
+        $imgActividad =  $_FILES["imgActividad"]["name"];
+        $tamaño =  $_FILES["imgActividad"]["size"];
+        move_uploaded_file($_FILES["imgActividad"]["tmp_name"],"imagenes/subidas/$imgActividad");
+        echo "La imagen se ha subido <b>con exito</b>. Tamaño de archivo <b>$tamaño bytes</b> Nombre imagen <b>$imgActividad</b> <br>";
+    }else{
+       array_push($errores, "No se ha podido subir la imagen");
+    };
+
 
     $actividad = new Actividad();
-    $actividad->construirActividad($codClase, $nombre, $descripcion, $id_profesor);
+    $actividad->construirActividad($codClase, $nombre, $descripcion, $id_profesor,$imgActividad);
+    var_dump($errores);
 
     if (empty($nombre) || empty($descripcion)) {
         array_push($errores, "*Es obligatorio completar todos los campos");
@@ -37,10 +56,11 @@ if (isset($_POST['crear'])) {
 </p>
 <div class="collapse" id="collapseExample">
     <div class="card card-body">
-        <form id="formCrearClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=homeProfesor">
+        <form id="formCrearClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=homeProfesor" enctype="multipart/form-data">
             <label for="nombreClase">Nombre Clase</label>
             <input name="nombreClase" type="text" class="form-control"><br>
-            <textarea name="descripcion" id="descripcion" class="form-control" placeholder="Descripcion actividad"></textarea>
+            <textarea name="descripcion" id="descripcion" class="form-control" placeholder="Descripcion actividad"></textarea><br>
+            <input name="imgActividad" type="file"><br><br>
 
             <input type="submit" value="Crear" class="btn btn-info btn-block rounded-0 py-2" name="crear">
 
@@ -65,7 +85,7 @@ if (isset($_POST['crear'])) {
     </div>
 </div>
 <div class="row" id="contacto">
-    <form action="mail.php" method="post">
+    <form action="mailto:spartan.academy12@gmail.com" method="post">
         <div class="card border-primary rounded-0">
             <div class="card-header p-0">
                 <div class="bg-info text-white text-center py-2">

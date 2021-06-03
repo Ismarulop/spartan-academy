@@ -5,6 +5,7 @@ require("clases/Actividad.php");
 require("clases/Horarios.php");
 
 
+
 $horario = [];
 $diasSemana = [
     "Lunes" => array(), "Martes" => array(), "Miercoles" => array(), "Jueves" => array(), "Viernes" => array(),
@@ -227,26 +228,35 @@ if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_
 
     <div class="col-md-3">
         <?php
-        if (isset($_GET['codHorario'])) {
-            // var_dump($_GET['codHorario']);
-            $lista = Horarios::mostrarListadeAlumnosListados($_GET['codHorario']);
-            if (!$lista) {
-                echo '<div class="alert alert-info" role="alert">';
-                echo 'No hay alumnos apuntados';
-                echo ' </div>';
-            } else {
-                echo '<ul class="list-group list-group-flush">';
-                echo '<li class="alert alert-primary"> <b>Listado de alumnos</b></li>';
-                while ($a = $lista->fetch_assoc()) {
+        if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
+            if (isset($_GET['codHorario'])) {
+                
+                                  
 
-                    echo  '<li class="list-group-item alumnoLista"><span class="nombreLista">' . $a['nombre'] . " " . $a['apellidos'] . '</span><small class="text-muted small">'.$a['fecha'].' </small><span>❌</span></li>';
-                }
+                // var_dump($_GET['codHorario']);
+                $lista = Horarios::mostrarListadeAlumnosListados($_GET['codHorario']);
+                if (!$lista) {
+                    echo '<div class="alert alert-info" role="alert">';
+                    echo 'No hay alumnos apuntados';
+                    echo ' </div>';
+                } else {
+                    echo '<ul class="list-group list-group-flush">';
+                    echo '<li class="alert alert-primary"> <b>Listado de alumnos</b></li>';
+                    while ($a = $lista->fetch_assoc()) {
 
-                echo '<button class="btn btn-outline-danger"> Descargar <i class="fas fa-file-pdf"></i></button>';
-                echo '</ul>';
+                        echo  '<li class="list-group-item alumnoLista"><span class="nombreLista">' . $a['nombre'] . " " . $a['apellidos'] . '</span><small class="text-muted small">' . $a['fecha'] . ' </small><span>❌</span></li>';
+                    }
+
         ?>
+                    
+                       <a href="CrearPdfProf.php?codHorario=<?php echo $_GET['codHorario'] ?>"  class="btn btn-outline-danger"> Descargar <i class="fas fa-file-pdf"></i></a> 
+                  
 
+                    <?php
+                    echo '</ul>';
+                    ?>
         <?php
+                }
             }
         }
 

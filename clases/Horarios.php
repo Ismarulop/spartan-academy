@@ -56,13 +56,7 @@ class Horarios
         }
         if (true) {
             // $conectar->query($resultado2);
-            if ($conectar->query($sql)) {
-                echo "se ha guardado";
-            } else {
-                echo $conectar->error;
-            }
-        } else {
-            echo "NOOOO";
+           $conectar->query($sql);
         }
         $conectar->close();
     }

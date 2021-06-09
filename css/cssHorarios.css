@@ -465,11 +465,11 @@ a {
 
 .cd-schedule .single-event[data-event="event-2"],
 .cd-schedule [data-event="event-2"] .header-bg {
-    background: #443453;
+    background: #bbe76a;
 }
 
 .cd-schedule .single-event[data-event="event-2"]:hover {
-    background: #513e63;
+    background: #e6f3a9;
 }
 
 .cd-schedule .single-event[data-event="event-3"],

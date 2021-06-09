@@ -29,20 +29,25 @@ console.log(coords);
 $("#alertHora").text(ahora.getHours() + " : " + ahora.getMinutes() + " : " + ahora.getSeconds())
 
 $(document).ready(function() {
-    let tiempoOculto = false;
+
+    setTimeout(() => {
+        $("#alertaPublicado").hide()
+    }, 5000);
+    let tiempoOculto = true;
 
     $("#cerrarAlert").on('click', function() {
         if (tiempoOculto) {
             $("#alertToggle").animate({
                 width: 'toggle'
             });
-            $("#cerrarAlert").html("❌")
+            $("#cerrarAlert").html("<i class='fas fa-umbrella'></i>")
         } else {
             $("#alertToggle").animate({
                 width: 'toggle'
             });
+            $("#cerrarAlert").html("❌")
 
-            $("#cerrarAlert").html("<i class='fas fa-umbrella'></i>")
+
 
 
         }
@@ -50,4 +55,5 @@ $(document).ready(function() {
 
 
     })
+    $("#cerrarAlert").click()
 })

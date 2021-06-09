@@ -14,7 +14,7 @@ if (isset($_POST['crear'])) {
     $descripcion = $_POST['descripcion'];
     $imgActividad=null;
     $id_profesor = $_SESSION['login']['datosUsuario']['userName'];    
-    $codClase = $nombre . "1"; //Mejorar luego
+    $codClase = $nombre;
 
     if(validarSubidaArchivos()){
         $tmp = $_FILES["imgActividad"]["tmp_name"];
@@ -29,7 +29,6 @@ if (isset($_POST['crear'])) {
 
     $actividad = new Actividad();
     $actividad->construirActividad($codClase, $nombre, $descripcion, $id_profesor,$imgActividad);
-    var_dump($errores);
 
     if (empty($nombre) || empty($descripcion)) {
         array_push($errores, "*Es obligatorio completar todos los campos");

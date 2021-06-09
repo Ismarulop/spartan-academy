@@ -1,3 +1,22 @@
+<?php
+require "clases/Comentario.php";
+
+$publicado = false;
+if (isset($_POST['enviarComentario'])) {
+  var_dump($_POST);
+  $codComentario = uniqid();
+  $comentario = $_POST['textoComentario'];
+  $userName = $_SESSION['login']['datosUsuario']['userName'];
+  $ratio = $_POST['rating'];
+
+  $newComentario = new Comentario;
+  $newComentario->construirComentario($codComentario, $comentario, $userName,$ratio);
+
+  $newComentario->insertarComentario();
+  $publicado = true;
+}
+?>
+
 <h1>PAGINA DE USUARIO</h1>
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-indicators">
@@ -25,6 +44,48 @@
     <span class="visually-hidden">Next</span>
   </button>
 </div>
+<br><br>
+
+
+<form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>?p=homeUser">
+  <div class="card">
+    <div class="row">
+      <div class="col-2"> <img src="imagenes/noImage.png" width="70" class="rounded-circle mt-2"> </div>
+      <div class="col-10">
+        <div class="comment-box ml-2">
+          <h4>Add a comment</h4>
+          <div class="rating"> <input checked type="radio" name="rating" value="5" id="5"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label> </div>
+          <div class="comment-area">
+            <textarea class="form-control" name="textoComentario" placeholder="what is your view?" rows="4"></textarea>
+          </div>
+          <div class="comment-btns mt-2">
+            <div class="row">
+              <div class="col-6">
+              </div>
+              <div class="col-6">
+                <div class="pull-right">
+                  <button type="submit" name="enviarComentario" class="btn btn-success send btn-sm">Send <i class="fa fa-long-arrow-right ml-1"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+
+<div id="alertaPublicado" class="row alert alert-success">
+  <?php
+  if($publicado==true){
+    echo "Su comentario se ha publicado con Éxito";
+  }
+  ?>
+</div>
+<br><br>
+
 
 <div class="row" id="sobreNosotros">
   <div class="jumbotron">

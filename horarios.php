@@ -43,11 +43,11 @@ if (isset($_POST['insertar'])) {
     }
 
     if (empty($errores)) {
-        echo "Se ha insertado con éxito la actividad ";
+        echo "<div class='row alert alert-success'>Se ha insertado con éxito la actividad </div>";
         $horaRellenada->insertarhoraActividad();
         // header("location:" . $_SERVER["PHP_SELF"] . "?p=horarios");
     } else {
-        echo "Error al insertar la actividad en el horario";
+        echo "<div class='row alert alert-danger'>Error al insertar la actividad en el horario </div>";
     }
 }
 
@@ -171,19 +171,21 @@ if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_
 
                                 <?php
                                 foreach ($arrayDia as $h) {
-                                    echo '<li onClick="mostrarLista(\'' . $h['codHorario'] . '\')" class="single-event" data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-1">';
-                                    echo $h['nombreActividad'] . " " . $h['plazasReservadas'] . "/" . $h['plazas'];
-                                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-                                ?>
+                                    $retVal="";
+                                    if (isset($_GET['codHorario'])) {
+                                        $retVal = ($_GET['codHorario']== $h['codHorario']) ? 'border' : '' ;
+                                    }
+                                        echo '<li onClick="mostrarLista(\'' . $h['codHorario'] . '\')" class="single-event horaHorario '.$retVal.' " data-start="' . $h['hora_comienzo'] . '" data-end="' . $h['hora_fin'] . '" data-content="event-abs-circuit" data-event="event-'.rand ( 1 , 4 ).'">';
+                                        echo "<div>".$h['nombreActividad'] . " </div><div>" . $h['plazasReservadas'] . "/" . $h['plazas']."</div>";
+                                        if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_SESSION['login']['datosUsuario']['esProfesor'] == true) {                                ?>
                                         <form id="formBorrarClase" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
                                             <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
-                                            <input type="submit" value="borrar" class="btn btn-info btn-block rounded-0 py-2" name="borrar">
+                                            <input type="submit" value="borrar" class="btn btn-danger btn-block py-2" name="borrar">
                                         </form>
 
                                         <?php
                                     }
-                                    if ($_SESSION['login']['datosUsuario']['esProfesor'] == false) {
-                                        if (Horarios::estaReservada($_SESSION['login']['datosUsuario']['userName'], $h['codHorario'])) {
+                                    if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_SESSION['login']['datosUsuario']['esProfesor'] == false) {                                        if (Horarios::estaReservada($_SESSION['login']['datosUsuario']['userName'], $h['codHorario'])) {
                                         ?>
                                             <form id="cancelarReserva" method="POST" action="<?php echo $_SERVER["PHP_SELF"] ?>?p=horarios">
                                                 <input type="hidden" name="codHorario" value="<?php echo $h['codHorario'] ?>">
@@ -228,8 +230,7 @@ if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_
 
     <div class="col-md-3">
         <?php
-        if ($_SESSION['login']['datosUsuario']['esProfesor'] == true) {
-            if (isset($_GET['codHorario'])) {
+if (isset($_SESSION['login']) && isset($_SESSION['login']['datosUsuario']) && $_SESSION['login']['datosUsuario']['esProfesor'] == true) {            if (isset($_GET['codHorario'])) {
                 
                                   
 

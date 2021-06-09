@@ -1,11 +1,14 @@
 <?php
-  if(isset($_SESSION['login']['datosUsuario'])){
-    if($_SESSION['login']['datosUsuario']['esProfesor']==1){
-      header("location: index.php?p=homeProfesor");
-    }else{
-      header("location: index.php?p=homeUser");
-    }
+require "clases/Comentario.php";
+if (isset($_SESSION['login']['datosUsuario'])) {
+  if ($_SESSION['login']['datosUsuario']['esProfesor'] == 1) {
+    header("location: index.php?p=homeProfesor");
+  } else {
+    header("location: index.php?p=homeUser");
   }
+}
+
+
 ?>
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-indicators">
@@ -32,6 +35,73 @@
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
+</div>
+
+<div id="comentariosListados" class="row" style="height: 400px;">
+  <div class="container-fluid px-3 px-sm-5 my-5 text-center">
+    <h4 class="mb-5 font-weight-bold">What Our Client Say</h4>
+    <div class="owl-carousel owl-theme">
+      <?php
+      $comentarios = Comentario::mostrarComentario();
+      var_dump($comentarios->num_rows);
+      $contador=0;
+      $filas=$comentarios->num_rows;
+      while ($u = $comentarios->fetch_assoc()) {
+        $primero=false;
+        $ultimo=false;
+        if ($contador==0) {
+          $primero=true;
+        }
+        if ($contador==$filas-1) {
+          $ultimo=true;
+        }
+      ?>
+        <div class="item <?php if ($primero) {
+          echo "first prev";
+        }elseif($ultimo){
+        echo "last";
+        }elseif ($contador==1) {
+          echo "show";
+        }else{
+          echo "next";
+        }
+          ?> ">
+          <div class="card border-0 py-3 px-4">
+            <div class="row justify-content-center"> <img src="https://i.imgur.com/gazoShk.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
+            <h6 class="mb-3 mt-2"><?php echo $u['userName'] ?></h6>
+            <p class="content mb-5 mx-2"><?php echo $u['contenido'] ?></p>
+            <h3><?php for ($i=0; $i < $u['ratio']; $i++) { 
+              echo "⭐";
+            } ?></h3>
+          </div>
+        </div>
+      <?php
+      $contador++;
+      }
+      ?>
+      <!-- <div class="item show">
+            <div class="card border-0 py-3 px-4">
+                <div class="row justify-content-center"> <img src="https://i.imgur.com/oW8Wpwi.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
+                <h6 class="mb-3 mt-2">Ximena Vegara</h6>
+                <p class="content mb-5 mx-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim.</p>
+            </div>
+        </div>
+        <div class="item next">
+            <div class="card border-0 py-3 px-4">
+                <div class="row justify-content-center"> <img src="https://i.imgur.com/ndQx2Rg.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
+                <h6 class="mb-3 mt-2">John Paul</h6>
+                <p class="content mb-5 mx-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim.</p>
+            </div>
+        </div>
+        <div class="item last">
+            <div class="card border-0 py-3 px-4">
+                <div class="row justify-content-center"> <img src="https://i.imgur.com/T5aOhwh.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
+                <h6 class="mb-3 mt-2">William Doe</h6>
+                <p class="content mb-5 mx-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim.</p>
+            </div>
+        </div> -->
+    </div>
+  </div>
 </div>
 
 <div class="row" id="sobreNosotros">

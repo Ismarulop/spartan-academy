@@ -48,11 +48,10 @@ CREATE TABLE comentario(
     id varchar(20) not null UNIQUE,
     contenido varchar(1000) not null,
     userName varchar(20) not null,
-    codClase varchar(20) not null,
-    fecha TIMESTAMP not null,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    rating varchar(20) DEFAULT '0',
     foreign Key (userName) references usuario(userName),
-    foreign Key (codClase) references actividad(codClase),
-    primary Key (codClase, userName)
+    primary Key (id)
 );
 CREATE TABLE horarios(
     codHorario varchar(20) not null UNIQUE,

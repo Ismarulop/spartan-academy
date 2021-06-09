@@ -1,6 +1,7 @@
 <?php
 session_start();
-require ("Clases/Conexion.php");
+require("clases/Conexion.php");
+
 ?>
 
 <!DOCTYPE html>
@@ -18,9 +19,14 @@ require ("Clases/Conexion.php");
     <link rel="stylesheet" href="css/cssHorarios.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/styles.css">
-   <script src="JS/tiempo.js"></script>
+    <script src="JS/tiempo.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="JS/comentarios.js"></script>
+    <!-- <script src="JS/localStorage.js"></script> -->
 
-   
+
 
 </head>
 
@@ -70,7 +76,7 @@ require ("Clases/Conexion.php");
                     <!-- Falta por terminar(desplegable) -->
 
                 <?php
-                    echo '<a href="?p=cerrarSesion" type="button" class="btn btn-outline-danger">Cerrar sesion</a><br><br>';
+                    echo '<a href="?p=cerrarSesion" class="btn btn-outline-danger">Cerrar sesion</a><br><br>';
                 }
                 ?>
 

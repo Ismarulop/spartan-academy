@@ -7,9 +7,7 @@ class Actividad
     private $nombre;
     private $descripcion;
     private $id_profesor;
-    // private	$sala;
-    // private	$hora_comienzo;
-    // private	$hora_fin;
+    
 
     function construirActividad($codClase, $nombre, $descripcion, $id_profesor,$imgActividad)
     {
@@ -35,8 +33,11 @@ class Actividad
 
     function insertarActividad()
     {
+        
         $conectar = conexion::abrir_conexion();
         $conectar->query("Insert into Actividad (codClase,nombre,descripcion,id_profesor,img) values('$this->codClase','$this->nombre','$this->descripcion','$this->id_profesor','$this->imgActividad')");
+        // var_dump($conectar->error);
+
         $conectar->close();
     }
 
@@ -60,7 +61,6 @@ class Actividad
     {
         $conectar = conexion::abrir_conexion();
         $resultado = $conectar->query("Select * from Actividad");
-
         if ($resultado->num_rows >= 1) {
             $conectar->close();
             return $resultado;

@@ -1,7 +1,6 @@
 <?php
 session_start();
 require("clases/Conexion.php");
-
 ?>
 
 <!DOCTYPE html>
@@ -25,15 +24,12 @@ require("clases/Conexion.php");
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="JS/comentarios.js"></script>
     <!-- <script src="JS/localStorage.js"></script> -->
-
-
-
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3" style="padding: 0 2em; overflow-x: hidden; width: 100%;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="?p=paginaPrincipal"><img src="imagenes/logo/logo.png" width="180" height="43" alt="logo" /></a>
+            <a class="navbar-brand" href="?p=paginaPrincipal"><img src="imagenes/logo/logo.png" height="43" alt="logo" /></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -57,29 +53,24 @@ require("clases/Conexion.php");
                 </ul>
                 <?php
                 if (!isset($_SESSION['login']['datosUsuario'])) {
-                    echo '<a href="?p=login" type="button" class="btn btn-outline-primary">Iniciar sesion</a><br><br>';
+                    echo '<a href="?p=login" type="button" class="btn btn-outline-primary mx-3">Iniciar sesion</a><br><br>';
                     echo '<a href="?p=register" type="button" class="btn btn-primary">Registrarse</a>';
                 } else {
                 ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <?php
-                            echo $_SESSION['login']['datosUsuario']['userName'];
-                            ?>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <?php echo $_SESSION['login']['datosUsuario']['userName'] ?></a>
+                        <!-- <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="#">Action</a>
                             <a class="dropdown-item" href="#">Another action</a>
                             <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
+                        </div> -->
                     </li>
                     <!-- Falta por terminar(desplegable) -->
-
                 <?php
                     echo '<a href="?p=cerrarSesion" class="btn btn-outline-danger">Cerrar sesion</a><br><br>';
                 }
                 ?>
-
             </div>
         </div>
     </nav>

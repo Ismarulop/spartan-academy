@@ -1,6 +1,7 @@
 <?php
 
-class Usuario{
+class Usuario
+{
     private $userName;
     private $nombre;
     private $apellidos;
@@ -8,9 +9,9 @@ class Usuario{
     private $edad;
     private $email;
     private $pass;
-    // private $imagen_perfil;
 
-    function construirUser($userName,$nombre,$apellidos,$dni,$edad, $email, $pass)
+
+    function construirUser($userName, $nombre, $apellidos, $dni, $edad, $email, $pass, $userImg)
     {
         $this->userName = $userName;
         $this->nombre = $nombre;
@@ -19,6 +20,7 @@ class Usuario{
         $this->edad = $edad;
         $this->email = $email;
         $this->pass = $pass;
+        $this->userImg = $userImg;
     }
 
     function getUserName()
@@ -50,7 +52,7 @@ class Usuario{
     {
         return $this->email;
     }
-    
+
     function getPass()
     {
         return $this->pass;
@@ -62,19 +64,21 @@ class Usuario{
     }
 
 
-function InsertarUsuario()
-{
-    $conectar = conexion::abrir_conexion();
-    $conectar->query("Insert into usuario (userName, nombre, apellidos, dni, edad, email, pass) values('$this->userName','$this->nombre','$this->apellidos','$this->dni','$this->edad','$this->email','$this->pass')");
-    $conectar->close();
-}
-
-
-function comprobarSiExiste($email)
+    function InsertarUsuario()
     {
         $conectar = conexion::abrir_conexion();
-        $resultado = $conectar->query("Select email from Profesor where email='$email'");
+        $conectar->query("Insert into usuario (userName, nombre, apellidos, dni, edad, email, pass,imagen_perfil) values('$this->userName','$this->nombre','$this->apellidos','$this->dni','$this->edad','$this->email','$this->pass','$this->userImg')");
+        // var_dump($conectar->error );
         
+        $conectar->close();
+    }
+
+
+    function comprobarSiExiste($email)
+    {
+        $conectar = conexion::abrir_conexion();
+        $resultado = $conectar->query("Select email from usuario where email='$email'");
+
         //Contar num filas que devuelve el select
         if ($resultado->num_rows >= 1) {
             $conectar->close();
@@ -85,11 +89,11 @@ function comprobarSiExiste($email)
             return false;
         }
     }
-function comprobarSiExisteUserName($userName)
+    function comprobarSiExisteUserName($userName)
     {
         $conectar = conexion::abrir_conexion();
-        $resultado = $conectar->query("Select userName from Profesor where userName='$userName'");
-        
+        $resultado = $conectar->query("Select userName from usuario where userName='$userName'");
+
         //Contar num filas que devuelve el select
         if ($resultado->num_rows >= 1) {
             $conectar->close();
@@ -100,11 +104,11 @@ function comprobarSiExisteUserName($userName)
             return false;
         }
     }
-function comprobarSiExisteDni($dni)
+    function comprobarSiExisteDni($dni)
     {
         $conectar = conexion::abrir_conexion();
-        $resultado = $conectar->query("Select dni from Profesor where dni='$dni'");
-        
+        $resultado = $conectar->query("Select dni from usuario where dni='$dni'");
+
         //Contar num filas que devuelve el select
         if ($resultado->num_rows >= 1) {
             $conectar->close();
@@ -124,7 +128,7 @@ function comprobarSiExisteDni($dni)
 
         //El resultado se convierte en un array asociativo
         $fila = $resultado->fetch_assoc();
-        if($resultado->num_rows<1) return false;
+        if ($resultado->num_rows < 1) return false;
         if ($fila['email'] == $email && $fila['pass'] == $pass) {
             $conectar->close();
             return $fila;
@@ -139,9 +143,9 @@ function comprobarSiExisteDni($dni)
     {
         $conectar = conexion::abrir_conexion();
         $resultado = $conectar->query("Select * from usuarios where email='$email'");
-        $fila= $resultado->fetch_assoc();
-        $nombre=$fila['nombre'];
-        var_dump($resultado);
+        $fila = $resultado->fetch_assoc();
+        $nombre = $fila['nombre'];
+        // var_dump($resultado);
         $conectar->close();
 
         return $nombre;

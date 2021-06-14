@@ -1,3 +1,6 @@
+<?php
+ob_start();
+?>
 <?php include "header.php" ?>
 
 <?php include "main.php" ?>
@@ -15,3 +18,6 @@
 </div>
 
 <?php include "footer.php" ?>
+<?php
+ob_end_flush();
+?>

@@ -18,13 +18,13 @@ if (isset($_SESSION['login']['datosUsuario'])) {
   </div>
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="imagenes/slider/slider1.jpg" class="d-block w-100" alt="...">
+      <img src="imagenes/slider/slide1.jpg" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item">
-      <img src="imagenes/slider/slider2.jpg" class="d-block w-100" alt="...">
+      <img src="imagenes/slider/slide2.jpg" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item">
-      <img src="imagenes/slider/slider3.jpg" class="d-block w-100" alt="...">
+      <img src="imagenes/slider/slide3.jpg" class="d-block w-100" alt="...">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -37,90 +37,76 @@ if (isset($_SESSION['login']['datosUsuario'])) {
   </button>
 </div>
 
-<div id="comentariosListados" class="row" style="height: 400px;">
+<div id="comentariosListados" class="row">
   <div class="container-fluid px-3 px-sm-5 my-5 text-center">
-    <h4 class="mb-5 font-weight-bold">What Our Client Say</h4>
+    <h4 class="mb-5 font-weight-bold text-white">Reseñas de nuestros alumnos</h4>
     <div class="owl-carousel owl-theme">
       <?php
       $comentarios = Comentario::mostrarComentario();
-      var_dump($comentarios->num_rows);
-      $contador=0;
-      $filas=$comentarios->num_rows;
-      while ($u = $comentarios->fetch_assoc()) {
-        $primero=false;
-        $ultimo=false;
-        if ($contador==0) {
-          $primero=true;
-        }
-        if ($contador==$filas-1) {
-          $ultimo=true;
-        }
+      if (!$comentarios) {
+        echo "no hay reseñas por el momento";
+      } else {
+        $contador = 0;
+        $filas = $comentarios->num_rows;
+
+
+        while ($u = $comentarios->fetch_assoc()) {
+
+
+
+          $primero = false;
+          $ultimo = false;
+          if ($contador == 0) {
+            $primero = true;
+          }
+          if ($contador == $filas-1) {
+            $ultimo = true;
+          }
       ?>
-        <div class="item <?php if ($primero) {
-          echo "first prev";
-        }elseif($ultimo){
-        echo "last";
-        }elseif ($contador==1) {
-          echo "show";
-        }else{
-          echo "next";
-        }
-          ?> ">
-          <div class="card border-0 py-3 px-4">
-            <div class="row justify-content-center"> <img src="https://i.imgur.com/gazoShk.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
-            <h6 class="mb-3 mt-2"><?php echo $u['userName'] ?></h6>
-            <p class="content mb-5 mx-2"><?php echo $u['contenido'] ?></p>
-            <h3><?php for ($i=0; $i < $u['ratio']; $i++) { 
-              echo "⭐";
-            } ?></h3>
+          <div class="item <?php if ($primero) {
+                              echo "first prev";
+                            } elseif ($ultimo) {
+                              echo "last";
+                            } elseif ($contador == 1||$filas==0) {
+                              echo "show";
+                            } else {
+                              echo "next";
+                            }
+                            ?> ">
+            <div class="card border-0 py-3 px-4">
+              <div class="row justify-content-center"> <img src="
+              <?php
+              if ($u['imagen_perfil'] == null) {
+                echo "imagenes/noImage.png";
+              } else {
+                echo "imagenes/subidas/" . $u['imagen_perfil'];
+              }
+              ?>" 
+              class="img-fluid profile-pic mb-4 mt-3"> </div>
+              <h6 class="mb-3 mt-2"><?php echo $u['userName'] ?></h6>
+              <p class="content mb-5 mx-2"><?php echo $u['contenido'] ?></p>
+              <h3><?php for ($i = 0; $i < $u['rating']; $i++) {
+                    echo "⭐";
+                  } ?></h3>
+            </div>
           </div>
-        </div>
       <?php
-      $contador++;
+          $contador++;
+        }
       }
       ?>
-      <!-- <div class="item show">
-            <div class="card border-0 py-3 px-4">
-                <div class="row justify-content-center"> <img src="https://i.imgur.com/oW8Wpwi.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
-                <h6 class="mb-3 mt-2">Ximena Vegara</h6>
-                <p class="content mb-5 mx-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim.</p>
-            </div>
-        </div>
-        <div class="item next">
-            <div class="card border-0 py-3 px-4">
-                <div class="row justify-content-center"> <img src="https://i.imgur.com/ndQx2Rg.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
-                <h6 class="mb-3 mt-2">John Paul</h6>
-                <p class="content mb-5 mx-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim.</p>
-            </div>
-        </div>
-        <div class="item last">
-            <div class="card border-0 py-3 px-4">
-                <div class="row justify-content-center"> <img src="https://i.imgur.com/T5aOhwh.jpg" class="img-fluid profile-pic mb-4 mt-3"> </div>
-                <h6 class="mb-3 mt-2">William Doe</h6>
-                <p class="content mb-5 mx-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim.</p>
-            </div>
-        </div> -->
     </div>
   </div>
 </div>
 
-<div class="row" id="sobreNosotros">
-  <div class="jumbotron">
-    <h1 class="display-4">Hello, world!</h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-    <hr class="my-4">
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <p class="lead">
-      <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    </p>
-  </div>
-</div>
-<div class="row" id="contacto">
+
+<br><br>
+<div class="row mb-4" id="contacto">
   <form action="mailto:spartan.academy12@gmail.com" method="post">
-    <div class="card border-primary rounded-0">
+    <div class="card border-danger rounded-0">
       <div class="card-header p-0">
-        <div class="bg-info text-white text-center py-2">
-          <h3><i class="fa fa-envelope"></i> Contactanos</h3>
+        <div class="bg-dark text-white text-center py-2">
+          <h3><i class="fa fa-envelope text-danger"></i> Contactanos</h3>
           <p class="m-0">Con gusto te ayudaremos</p>
         </div>
       </div>
@@ -130,7 +116,7 @@ if (isset($_SESSION['login']['datosUsuario'])) {
         <div class="form-group">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
-              <div class="input-group-text"><i class="fa fa-user text-info"></i></div>
+              <div class="input-group-text"><i class="fa fa-user text-danger"></i></div>
             </div>
             <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre y Apellido" required>
           </div>
@@ -138,7 +124,7 @@ if (isset($_SESSION['login']['datosUsuario'])) {
         <div class="form-group">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
-              <div class="input-group-text"><i class="fa fa-envelope text-info"></i></div>
+              <div class="input-group-text"><i class="fa fa-envelope text-danger"></i></div>
             </div>
             <input type="email" class="form-control" id="nombre" name="email" placeholder="ejemplo@gmail.com" required>
           </div>
@@ -147,17 +133,27 @@ if (isset($_SESSION['login']['datosUsuario'])) {
         <div class="form-group">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
-              <div class="input-group-text"><i class="fa fa-comment text-info"></i></div>
+              <div class="input-group-text"><i class="fa fa-comment text-danger"></i></div>
             </div>
             <textarea class="form-control" placeholder="Envianos tu Mensaje" required></textarea>
           </div>
         </div>
 
         <div class="text-center">
-          <input type="submit" value="Enviar" class="btn btn-info btn-block rounded-0 py-2">
+          <input type="submit" value="Enviar" class="btn btn-danger btn-block rounded-0 py-2">
         </div>
       </div>
 
     </div>
   </form>
 </div>
+
+<div class="row" id="sobreNosotros">
+  <div class="jumbotron">
+    <h1 class="display-4">Sobre Spartan Academy</h1>
+    <p class="lead">Somos un centro deportivo dedicado a las artes marciales. En nuestro centro podras practicar diferentes disciplinas de los mejores profesores.</p>
+    <hr class="my-4">
+    <p>Vente a conocernos de primera mano y disfruta !</p>
+  </div>
+</div>
+<br><br>

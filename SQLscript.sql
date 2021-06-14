@@ -26,11 +26,11 @@ CREATE TABLE profesor(
 CREATE TABLE actividad(
     nombre varchar(20) not null UNIQUE,
     codClase varchar(20) not null UNIQUE,
-    descripcion varchar(300) not null,
+    descripcion varchar(1000) not null,
     id_profesor varchar(20) not null,
     sala varchar(20) not null,
-    hora_comienzo TIMESTAMP not null,
-    hora_fin TIMESTAMP not null,
+    hora_comienzo TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    hora_fin TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     img varchar(300),
     primary Key (nombre),
     foreign Key (id_profesor) references profesor(userName)
@@ -38,7 +38,7 @@ CREATE TABLE actividad(
 CREATE TABLE reserva(
     userName varchar(20) not null,
     codHorario varchar(20) not null,
-    fecha TIMESTAMP not null,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     -- foreign Key (userName) references usuario(userName),
     -- foreign Key (codHorario) references horarios(codHorario),
     codReserva INT NOT NULL AUTO_INCREMENT,
@@ -64,3 +64,5 @@ CREATE TABLE horarios(
     primary Key (codHorario),
     foreign Key (nombreActividad) references actividad(nombre)
 );
+
+--p3UpVSy8tw1HO)R&^1VW contraseña 000WebHost

@@ -40,7 +40,7 @@ $(document).ready(function() {
             $("#alertToggle").animate({
                 width: 'toggle'
             });
-            $("#cerrarAlert").html("<i class='fas fa-umbrella'></i>")
+            $("#cerrarAlert").html("<i class='fas fa-umbrella fa-spin'></i>")
         } else {
             $("#alertToggle").animate({
                 width: 'toggle'
